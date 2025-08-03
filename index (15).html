@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MTZ Haber</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background:#f4f6f8;
+    margin:0; padding:0;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+  header {
+    background:#0057b8;
+    color:white;
+    padding:15px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
+  }
+  header h1 {
+    margin:0; font-weight:bold;
+    cursor:pointer;
+  }
+  nav button {
+    background:transparent;
+    border: 2px solid white;
+    color:white;
+    padding:7px 14px;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:600;
+    margin-left:10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  nav button:hover {
+    background:white;
+    color:#0057b8;
+  }
+  main {
+    flex:1;
+    max-width: 800px;
+    margin: 30px auto 50px;
+    background:white;
+    border-radius:10px;
+    padding: 25px 30px;
+    box-shadow: 0 6px 15px rgb(0 0 0 / 0.1);
+  }
+  ul#newsList {
+    list-style:none;
+    padding:0;
+    margin:0;
+  }
+  ul#newsList li {
+    padding: 15px 20px 25px 20px;
+    border-bottom: 1px solid #eee;
+    cursor:pointer;
+    color:#0057b8;
+    transition: background-color 0.2s ease;
+  }
+  ul#newsList li:hover {
+    background:#e6f0ff;
+  }
+  #newsDetail {
+    display:none;
+  }
+  #newsDetail h2 {
+    color:#004080;
+    margin-top:0;
+  }
+  #newsDetail p {
+    line-height:1.6;
+    font-size:1.1rem;
+    margin-bottom:15px;
+  }
+  #newsDetail small {
+    color:#666;
+  }
+  #backBtn {
+    background:#0057b8;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:700;
+    margin-top:20px;
+    transition: background-color 0.3s ease;
+  }
+  #backBtn:hover {
+    background:#003d66;
+  }
+  form {
+    max-width: 350px;
+    margin: 0 auto;
+    display:flex;
+    flex-direction: column;
+  }
+  input {
+    padding:12px 15px;
+    margin:8px 0;
+    border: 2px solid #ddd;
+    border-radius:8px;
+    font-size:1rem;
+    transition: border-color 0.3s ease;
+  }
+  input:focus {
+    border-color:#0057b8;
+    outline:none;
+  }
+  button.submitBtn {
+    background:#0057b8;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    font-weight:700;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:12px;
+    transition: background-color 0.3s ease;
+  }
+  button.submitBtn:hover {
+    background:#003d66;
+  }
+  .message {
+    margin-top: 10px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .message.error {
+    color: #cc3300;
+  }
+  .message.success {
+    color: #339900;
+  }
+  footer {
+    background:#0057b8;
+    color:white;
+    text-align:center;
+    font-weight:600;
+    padding:15px 10px;
+  }
+  .welcomeMsg {
+    text-align:center;
+    margin-bottom:20px;
+    font-weight:700;
+    color:#0057b8;
+  }
+  @media (max-width:480px) {
+    main {
+      margin:15px 10px 50px;
+      padding:20px 15px;
+    }
+    nav button {
+      padding:6px 10px;
+      margin-left:6px;
+      font-size:0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="homeBtn">MTZ Haber</h1>
+  <nav>
+    <button id="loginBtn">Giriş Yap</button>
+    <button id="signupBtn">Kayıt Ol</button>
+    <button id="logoutBtn" style="display:none;">Çıkış Yap</button>
+  </nav>
+</header>
+
+<main>
+  <div id="welcome" class="welcomeMsg"></div>
+
+  <section id="newsSection">
+    <ul id="newsList"></ul>
+    <div id="newsDetail">
+      <h2></h2>
+      <p></p>
+      <small></small>
+      <button id="backBtn">Geri</button>
+    </div>
+  </section>
+
+  <section id="loginSection" style="display:none;">
+    <h2 style="text-align:center;">Giriş Yap</h2>
+    <form id="loginForm">
+      <input type="text" id="loginUser" placeholder="Kullanıcı Adı" required autocomplete="username" />
+      <input type="password" id="loginPass" placeholder="Şifre" required autocomplete="current-password" />
+      <button type="submit" class="submitBtn">Giriş</button>
+      <div id="loginMsg" class="message error"></div>
+    </form>
+  </section>
+
+  <section id="signupSection" style="display:none;">
+    <h2 style="text-align:center;">Kayıt Ol</h2>
+    <form id="signupForm">
+      <input type="text" id="signupUser" placeholder="Kullanıcı Adı" required autocomplete="username" />
+      <input type="password" id="signupPass" placeholder="Şifre" required autocomplete="new-password" />
+      <button type="submit" class="submitBtn">Kayıt Ol</button>
+      <div id="signupMsg" class="message"></div>
+    </form>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 MTZ Haber | Tüm Hakları Saklıdır
+</footer>
+
+<script>
+  // Haber verileri
+  const haberler = [
+    {id:1, baslik:"Kardeşine 1 Milyon TL Gönderdi!", icerik:"Mehmet Abi, kardeşi Ahmet'e tam 1 milyon TL göndererek ailesine büyük destek oldu. Aile arasında mutluluk hakim.", tarih:"1 Ağustos 2025"},
+    {id:2, baslik:"Yapay Zeka Sanat Dünyasını Değiştiriyor", icerik:"Yapay zeka teknolojileri, sanat alanında çığır açıyor. Yeni eserler ortaya çıkıyor.", tarih:"2 Ağustos 2025"},
+    {id:3, baslik:"Yeni Güneş Enerjisi Projesi Başladı", icerik:"Türkiye'de dev güneş enerjisi projesi hayata geçirildi.", tarih:"3 Ağustos 2025"},
+    {id:4, baslik:"Eğitimde Dijital Dönüşüm", icerik:"Okullarda dijital eğitim araçları yaygınlaşıyor.", tarih:"4 Ağustos 2025"},
+    {id:5, baslik:"Sağlıkta Yapay Zeka Uygulamaları", icerik:"Hastanelerde yapay zeka destekli teşhis sistemleri kullanılmaya başlandı.", tarih:"5 Ağustos 2025"},
+    {id:6, baslik:"Turizm Sektöründe Canlanma", icerik:"Ülkemiz turizmde rekor ziyaretçi sayısına ulaştı.", tarih:"6 Ağustos 2025"},
+    {id:7, baslik:"Tarımda Yeni Teknolojiler", icerik:"Çiftçiler modern teknolojilerle verimliliği artırıyor.", tarih:"7 Ağustos 2025"},
+    {id:8, baslik:"Yerel Sanatçılara Destek", icerik:"Belediye yerel sanat projelerine fon sağladı.", tarih:"8 Ağustos 2025"},
+    {id:9, baslik:"Sporcularımız Dünya Şampiyonu Oldu", icerik:"Milli sporcularımız uluslararası başarılar elde etti.", tarih:"9 Ağustos 2025"},
+    {id:10, baslik:"Kentsel Dönüşüm Projeleri Başladı", icerik:"Yeni şehir planlamaları kapsamında kentsel dönüşüm hızlandı.", tarih:"10 Ağustos 2025"},
+    {id:11, baslik:"Uzay Teknolojilerinde Yeni Atılım", icerik:"Türkiye uzay programında yeni adımlar attı.", tarih:"11 Ağustos 2025"},
+    {id:12, baslik:"Çevre Koruma Kampanyaları", icerik:"Halk çevre duyarlılığı için bir araya geliyor.", tarih:"12 Ağustos 2025"},
+  ];
+
+  // Kullanıcı verileri (basit örnek, gerçek projede sunucu ve DB kullanılır)
+  const usersKey = 'mtzUsers';
+  let users = JSON.parse(localStorage.getItem(usersKey)) || [];
+
+  const newsListEl = document.getElementById('newsList');
+  const newsDetailEl = document.getElementById('newsDetail');
+  const backBtn = document.getElementById('backBtn');
+  const welcomeEl = document.getElementById('welcome');
+
+  const loginBtn = document.getElementById('loginBtn');
+  const signupBtn = document.getElementById('signupBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  const loginSection = document.getElementById('loginSection');
+  const signupSection = document.getElementById('signupSection');
+  const newsSection = document.getElementById('newsSection');
+
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
+
+  const loginMsg = document.getElementById('loginMsg');
+  const signupMsg = document.getElementById('signupMsg');
+
+  const homeBtn = document.getElementById('homeBtn');
+
+  let loggedUser = localStorage.getItem('mtzLoggedUser') || null;
+
+  function showNewsList() {
+    newsListEl.innerHTML = '';
+    for(let h of haberler) {
+      let li = document.createElement('li');
+      li.dataset.id = h.id;
+
+      let baslik = document.createElement('div');
+      baslik.textContent = h.baslik;
+      baslik.style.fontWeight = '700';
+      baslik.style.marginBottom = '4px';
+
+      let tarih = document.createElement('small');
+      tarih.textContent = h.tarih;
+      tarih.style.color = '#888';
+      tarih.style.display = 'block';
+      tarih.style.marginBottom = '6px';
+
+      let ozet = document.createElement('div');
+      ozet.textContent = h.icerik.length > 80 ? h.icerik.substring(0, 80) + '...' : h.icerik;
+      ozet.style.color = '#444';
+      ozet.style.fontSize = '0.9rem';
+
+      li.appendChild(baslik);
+      li.appendChild(tarih);
+      li.appendChild(ozet);
+
+      newsListEl.appendChild(li);
+    }
+  }
+
+  function showNewsDetail(id) {
+    const haber = haberler.find(h => h.id == id);
+    if(!haber) return;
+
+    newsDetailEl.querySelector('h2').textContent = haber.baslik;
+    newsDetailEl.querySelector('p').textContent = haber.icerik;
+    newsDetailEl.querySelector('small').textContent = haber.tarih;
+
+    newsSection.querySelector('ul#newsList').style.display = 'none';
+    newsDetailEl.style.display = 'block';
+  }
+
+  function backToList() {
+    newsDetailEl.style.display = 'none';
+    newsSection.querySelector('ul#newsList').style.display = 'block';
+  }
+
+  function updateUI() {
+    if(loggedUser) {
+      welcomeEl.textContent = `Hoşgeldin, ${loggedUser}!`;
+      loginBtn.style.display = 'none';
+      signupBtn.style.display = 'none';
+      logoutBtn.style.display = 'inline-block';
+      loginSection.style.display = 'none';
+      signupSection.style.display = 'none';
+      newsSection.style.display = 'block';
+    } else {
+      welcomeEl.textContent = '';
+      loginBtn.style.display = 'inline-block';
+      signupBtn.style.display = 'inline-block';
+      logoutBtn.style.display = 'none';
+      loginSection.style.display = 'none';
+      signupSection.style.display = 'none';
+      newsSection.style.display = 'block';
+    }
+  }
+
+  // Event Listeners
+
+  // Haber tıklayınca detay göster
+  newsListEl.addEventListener('click', e => {
+    let li = e.target.closest('li');
+    if(li) {
+      showNewsDetail(li.dataset.id);
+    }
+  });
+
+  backBtn.addEventListener('click', () => {
+    backToList();
+  });
+
+  loginBtn.addEventListener('click', () => {
+    loginSection.style.display = 'block';
+    signupSection.style.display = 'none';
+    newsSection.style.display = 'none';
+    loginMsg.textContent = '';
+  });
+
+  signupBtn.addEventListener('click', () => {
+    signupSection.style.display = 'block';
+    loginSection.style.display = 'none';
+    newsSection.style.display = 'none';
+    signupMsg.textContent = '';
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    loggedUser = null;
+    localStorage.removeItem('mtzLoggedUser');
+    updateUI();
+    backToList();
+  });
+
+  homeBtn.addEventListener('click', () => {
+    backToList();
+    updateUI();
+  });
+
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    let username = loginForm.loginUser.value.trim();
+    let password = loginForm.loginPass.value.trim();
+
+    let user = users.find(u => u.username === username && u.password === password);
+    if(user) {
+      loggedUser = username;
+      localStorage.setItem('mtzLoggedUser', loggedUser);
+      updateUI();
+      backToList();
+    } else {
+      loginMsg.textContent = 'Kullanıcı adı veya şifre yanlış!';
+    }
+  });
+
+  signupForm.addEventListener('submit', e => {
+    e.preventDefault();
+    let username = signupForm.signupUser.value.trim();
+    let password = signupForm.signupPass.value.trim();
+
+    if(users.find(u => u.username === username)) {
+      signupMsg.textContent = 'Bu kullanıcı adı zaten kayıtlı!';
+      signupMsg.className = 'message error';
+    } else {
+      users.push({username, password});
+      localStorage.setItem(usersKey, JSON.stringify(users));
+      signupMsg.textContent = 'Kayıt başarılı! Şimdi giriş yapabilirsiniz.';
+      signupMsg.className = 'message success';
+      signupForm.reset();
+    }
+  });
+
+  // İlk yükleme
+  showNewsList();
+  updateUI();
+
+</script>
+</body>
+</html>
